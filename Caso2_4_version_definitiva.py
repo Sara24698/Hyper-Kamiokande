@@ -187,6 +187,40 @@ def results(B_perp_all):
     plt.tight_layout()
     plt.show()
     
+    
+def cylinder(B_perp_all, PMTs_all):
+
+
+    threshold = 100  # mG
+
+    # Filter the data to keep only points with B_perp > 100 mG
+    mask = B_perp_all > threshold
+
+    # Apply the mask to filter the coordinates and B_perp values
+    x = PMTs_all[mask, 0]
+    y = PMTs_all[mask, 1]
+    z = PMTs_all[mask, 2]
+    B_perp_filtered = B_perp_all[mask]
+    
+    # Creating the 3D scatter plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # Scatter plot with color mapping for B_perp
+    sc = ax.scatter(x, y, z, c=B_perp_filtered, cmap='viridis')  # You can change 'viridis' to other color maps
+    
+    # Adding color bar
+    plt.colorbar(sc, label='B_perp')
+    
+    # Adding labels and title
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    ax.set_title('PMTs with Bperp > 100 mG')
+    
+    # Show the plot
+    plt.show()
+    
 
 if __name__ == "__main__":
     # Generate PMT coordinates for top, bottom, and walls
@@ -200,7 +234,11 @@ if __name__ == "__main__":
 
     # Combine B_perp values for all PMTs
     B_perp_all = np.concatenate([B_perp_top, B_perp_bottom, B_perp_paredes])
+    
+    PMTs_all = np.concatenate([PMTs_top, PMTs_bottom, PMTs_paredes])
 
     #Calculate the results
     results(B_perp_all)
+    
+    cylinder(B_perp_all, PMTs_all)
     
